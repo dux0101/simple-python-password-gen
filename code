@@ -1,0 +1,29 @@
+import hashlib
+import random
+
+def generate_salt(length=16):
+    """Generate a random salt of the given length"""
+    return ''.join(random.choices('0123456789abcdef', k=length))
+
+def hash_password(password, salt=None):
+    """Hash the given password using sha256 and the optional salt"""
+    if salt is None:
+        salt = generate_salt()
+    hash = hashlib.sha256((password + salt).encode()).hexdigest()
+    return (hash, salt)
+
+def verify_password(password, hashed_password, salt):
+    """Verify the given password against the stored hashed password and salt"""
+    return hashed_password == hashlib.sha256((password + salt).encode()).hexdigest()
+
+def generate_password(length=12):
+    """Generate a random password of the given length"""
+    return ''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?', k=length))
+
+# random exmpl
+password = generate_password()
+hashed_password, salt = hash_password(password)
+print("Password:", password)
+print("Hashed password:", hashed_password)
+print("Salt:", salt)
+print("Password matches:", verify_password(password, hashed_password, salt))
